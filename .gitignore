@@ -1,0 +1,15 @@
+.env
+.env.local
+**/.venv/
+__pycache__/
+*.pyc
+node_modules/
+dist/
+reports/score_cache*.json
+predictions.csv
+.DS_Store
+disha-care-compass/
+.pytest_cache/
+**/.pytest_cache/
+*.log
+web/dev-dist/

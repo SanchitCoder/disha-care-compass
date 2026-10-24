@@ -1,0 +1,36 @@
+# Label definitions + matching rules, written from the organisers' data/README.md and verified against triage_dataset.jsonl.
+# Label *names* are read from the dataset itself; this file only adds definitions, ordering and rules.
+care_types:
+  paramedic_home_visit: >-
+    A Sanocare Medic (GNM / B.Sc nursing) visits the home for a general health complaint or check-up (fever, cough, weakness,
+    BP or sugar check) with an optional virtual doctor consult. Ops term is "Medic"; the contract label keeps "paramedic".
+  home_nursing: >-
+    A Medic visits the home for a specific nursing procedure: injections (IM / insulin / IV), wound or post-operative dressing,
+    bedsore dressing, catheter care.
+  lab_test_home: >-
+    A phlebotomist collects samples at home for diagnostic tests (CBC, thyroid, blood sugar, full-body checkup). Urgency is "scheduled".
+  teleconsultation: >-
+    A doctor (MBBS) consults virtually for non-urgent queries: discussing reports, a second opinion on a prescription,
+    mild complaints such as acidity. Distance does not matter.
+  emergency_112: >-
+    Any red-flag symptom. Route to emergency services (112 / 108), never to home care. No caregivers are matched.
+follow_up: >-
+  The request is too vague to decide (e.g. "I need help", "doctor chahiye", "mummy ke liye kuch book karna hai"): ask ONE clarifying
+  question and leave care_type and urgency null.
+urgency:   # least -> most urgent
+  scheduled: Planned / can be booked for a later time (lab tests, check-ups).
+  same_day: Needs care today (home visits, nursing, doctor consults).
+  emergency: Red flag present; call 112 / 108 now.
+urgency_order: [scheduled, same_day, emergency]
+# the organisers' controlled vocabulary for red_flags
+red_flag_vocab: [chest_pain, breathlessness, unconsciousness, severe_bleeding, stroke_symptoms, seizure, high_fever_infant, suicidal_ideation, severe_dehydration]
+
+matching:
+  # care type -> caregiver role that can serve it
+  roles: {paramedic_home_visit: medic, home_nursing: medic, lab_test_home: phlebotomist, teleconsultation: doctor}
+  # skill a caregiver must have (any of), when the care type implies one and the text names no specific procedure
+  default_skills: {paramedic_home_visit: [vitals_monitoring]}
+  # procedure named in the request -> required skill (any of)
+  procedure_skills: {injection: [injection_im], iv: [injection_iv], dressing: [wound_dressing], catheter: [catheter_care]}
+  # care types where distance is ignored (virtual)
+  virtual: [teleconsultation]
