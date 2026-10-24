@@ -1,0 +1,191 @@
+# Deterministic multilingual red-flag lexicon (regex, case-insensitive).
+# patterns: any one fires the flag.  requires_all: list of groups; every group must have a hit.
+# Negation (nahi/not/theek hai ... within 4 tokens) is handled in code.
+flags:
+  - id: unresponsive
+    label_en: unresponsive / unconscious
+    label_hi: बेहोश / जवाब नहीं दे रहे
+    patterns:
+      - 'b[ae]+h?o+sh\w*'
+      - '(?<![a-z])hosh\s*(me|mein|mai)?\s*(nahi|nhi|nahin)'
+      - 'uth\s*(nahi|nhi)\s*(rah|ra)'
+      - 'jaag\s*(nahi|nhi)\s*(rah|ra)'
+      - 'unconscious'
+      - '(response|jawab|jawaab)\s*(nahi|nhi|nahin)\s*(de|mil)'
+      - 'collaps'
+      - 'achanak\s*gir\s*gay\w*'
+      - 'not\s*(responding|responsive)'
+      - 'जवाब\s*(नहीं|नही)\s*दे'
+      - 'अचानक\s*गिर'
+      - 'unresponsive'
+      - 'not\s*respond(ing)?'
+      - 'not\s*waking'
+      - 'बेहोश'
+      - 'होश\s*(में)?\s*(नहीं|नही)'
+      - 'उठ\s*नहीं\s*रह'
+  - id: breathing
+    label_en: severe breathing difficulty
+    label_hi: साँस लेने में गंभीर तकलीफ़
+    patterns:
+      - 'saa?ns\s*(nahi|nhi|nahin)\s*(aa|a|le|lep?a)\b'
+      - 'saa?ns\s*(phool|phul|ukhad|tez)'
+      - 'saa?ns\s*lene\s*(me|mein|mai)?\s*(koi\s*)?(dikkat|takleef|problem|mushkil|taklif)'
+      - 'saa?ns\s*(me|mein|mai)\s*(koi\s*)?(dikkat|takleef|problem|mushkil)'
+      - 'breathless(ness)?'
+      - 'short(ness)?\s*of\s*breath'
+      - 'can''?t\s*breathe'
+      - 'cannot\s*breathe'
+      - '(difficulty|trouble|struggling)\s*(in\s*)?breathing'
+      - 'gasping'
+      - 'dam\s*ghut'
+      - 'सा[ँ]?ं?स\s*(नहीं|नही|फूल|लेने)'
+      - 'सांस\s*(नहीं|नही|फूल|लेने)'
+      - 'साँस\s*(नहीं|नही|फूल|लेने)'
+      - 'दम\s*घुट'
+  - id: choking
+    label_en: choking
+    label_hi: गले में कुछ अटका / दम घुटना
+    patterns:
+      - 'choking'
+      - 'gale\s*(me|mein)\s*(kuch\s*)?(atak|phans)'
+      - 'गले\s*में\s*(कुछ\s*)?(अटक|फंस)'
+  - id: blue_lips
+    label_en: blue lips / face
+    label_hi: होंठ नीले
+    patterns:
+      - 'hoth\s*(neele|nile|neela|blue)'
+      - 'neele\s*hoth'
+      - 'lips?\s*(are\s*|have\s*)?(turn(ed|ing)?\s*)?(blue|bluish)'
+      - 'blue\s*lips'
+      - 'होंठ\s*नीले'
+  - id: chest_pain
+    label_en: chest pain
+    label_hi: सीने में दर्द
+    patterns:
+      - '(seene|sine|chest|chhati|chhaati|chaati)\s*(me|mein|mai|ke\s*beech)?\s*(mein\s*)?(\w+\s*)?(dard|pain|takleef|bhari|bhaari|jalan|dabav|pressure)'
+      - '(chest|heart)\s*pain'
+      - 'pain\s*(in|at)\s*(the\s*)?chest'
+      - '(सीने|छाती)\s*(में)?\s*(\S+\s*)?(दर्द|भारीपन)'
+  - id: chest_pain_combo
+    label_en: chest pain with sweating / arm / jaw pain
+    label_hi: सीने में दर्द के साथ पसीना / बाँह-जबड़े में दर्द
+    patterns:
+      - 'heart\s*attack'
+      - 'dil\s*ka\s*daura'
+      - 'दिल\s*का\s*दौरा'
+    requires_all:
+      - ['(seene|sine|chest|chhati|chhaati|chaati)\s*(me|mein|mai|ke\s*beech)?\s*(mein\s*)?(dard|pain|takleef|bhari|bhaari|jalan|dabav|pressure)',
+         '(सीने|छाती)\s*(में)?\s*(दर्द|भारीपन)']
+      - ['paseena|pasina|sweat|baa?yein?\s*haath|baa?yen\s*haath|left\s*arm|jaw|jabda|jabde|pasine',
+         'पसीना|बायें\s*हाथ|बाएं\s*हाथ|जबड़']
+  - id: stroke
+    label_en: stroke signs (face droop / weakness / speech)
+    label_hi: लकवे के लक्षण (मुँह टेढ़ा / कमज़ोरी / बोलने में दिक्कत)
+    patterns:
+      - 'mu+h\s*(tedha|teda|tedhaa|terha)'
+      - 'moo+h\s*(tedha|teda|terha)'
+      - 'face\s*droop(ing)?'
+      - 'ek\s*taraf\s*(se\s*)?(ki\s*)?(kamzori|kamjori|sunn|lakwa|laqwa)'
+      - 'bol\s*(nahi|nhi)\s*pa'
+      - 'slurred'
+      - 'la[kq]wa'
+      - 'zubaan\s*(lad|ladkhada)'
+      - 'one[\s-]*sided\s*weakness'
+      - 'लकवा'
+      - 'मुँह\s*टेढ़ा'
+      - 'मुंह\s*टेढ़ा'
+  - id: seizure
+    label_en: seizure / convulsion
+    label_hi: दौरा / मिर्गी
+    patterns:
+      - '\bdaura\b'
+      - '\bdaura\s*pad'
+      - 'jhatke'
+      - '\bfits\b'
+      - 'fit\s*(aa|a)\s*(gaya|gaye|gya|rha|raha)'
+      - 'seizure'
+      - 'convuls'
+      - 'mirgi'
+      - 'ang\s*akad'
+      - 'मिर्गी'
+      - 'दौरा'
+      - 'झटके'
+  - id: severe_bleeding
+    label_en: severe bleeding
+    label_hi: बहुत ज़्यादा खून बहना
+    patterns:
+      - 'khoon\s*(ruk|band)\s*(nahi|nhi|nahin)'
+      - 'khoon\s*(nahi|nhi)\s*(ruk|band)'
+      - 'heavy\s*bleeding'
+      - 'bleeding\s*(ruk|band)\s*(nahi|nhi|nahin)'
+      - 'bleeding[a-z\s]{0,20}(won''?t|will\s*not|not|can''?t)\s*(stop|ruk)'
+      - 'khoon\s*beh'
+      - 'खून\s*बह'
+      - 'खून\s*(नहीं|नही)\s*(रुक|बंद)'
+      - 'bahut\s*(zyada\s*)?khoon'
+      - 'bohot\s*khoon'
+      - 'bleeding\s*(nahi\s*ruk|wont\s*stop|won''t\s*stop|not\s*stopping)'
+      - 'खून\s*(बंद|रुक)\s*(नहीं|नही)'
+      - 'बहुत\s*(ज़्यादा\s*)?खून'
+  - id: head_injury
+    label_en: head injury with vomiting / confusion
+    label_hi: सिर में चोट के साथ उल्टी / भ्रम
+    requires_all:
+      - ['(sir|sar|head|matha|sir\s*me)\s*(pe|par|me|mein|ko)?\s*(ki\s*)?(chot|injury|lagi|lag\s*gayi|lag\s*gai)',
+         '(chot|injury)\s*(sir|sar|head)',
+         'सिर\s*(पर|में)?\s*चोट']
+      - ['ulti|vomit|behosh|confus|chakkar|hosh\s*(nahi|nhi)|उल्टी|बेहोश|भ्रम']
+  - id: poisoning
+    label_en: poisoning / overdose / snake bite
+    label_hi: ज़हर / ओवरडोज़ / साँप का काटना
+    patterns:
+      - 'zeher|zahar|jahar'
+      - 'poison'
+      - 'galti\s*se\s*(dawa|dawai|davai|dava|medicine|goli)\s*(kha|pi)'
+      - 'overdose'
+      - 'keeda\s*maar|kida\s*maar'
+      - 'phenyl\s*(pi|kha)'
+      - 'sa+np\s*(ne\s*)?(kat|daas)'
+      - 'snake\s*bite'
+      - 'ज़हर|जहर'
+      - 'सांप\s*(ने)?\s*काट'
+  - id: pregnancy_emergency
+    label_en: pregnancy with bleeding / severe pain / water break
+    label_hi: गर्भावस्था में खून / तेज़ दर्द / पानी जाना
+    requires_all:
+      - ['pregnan|garbhvati|garbhwati|garbh|pet\s*se\s*(hai|hain|he)|गर्भवती|गर्भ']
+      - ['bleeding|khoon|tez\s*dard|pani\s*gir|paani\s*gir|water\s*broke|खून|तेज़?\s*दर्द|पानी\s*गिर']
+  - id: infant_fever
+    label_en: fever / poor feeding in an infant under 3 months
+    label_hi: 3 महीने से छोटे शिशु को बुखार / दूध न पीना
+    special: infant_fever
+  - id: severe_burn
+    label_en: severe burn
+    label_hi: गंभीर जलना
+    requires_all:
+      - ['jal\s*(gay|gey|gya|gyi)\w*', 'burn(t|s|ed)?\b', 'जल\s*गय\w*']
+      - ['bahut|bohot|zyada|zyaada|chehra|chehre|face|badi|bada|बहुत|ज़्यादा|चेहरा|severe|large']
+  - id: suicidal
+    label_en: self-harm / suicidal thoughts
+    label_hi: खुद को नुकसान / आत्महत्या के विचार
+    patterns:
+      - 'khud\s*ko\s*(nuksan|nuksaan|hurt|khatam|maar)'
+      - 'marna\s*chah'
+      - 'mar\s*jana\s*chah|mar\s*jaana\s*chah'
+      - 'suicid'
+      - 'jaan\s*de(na|ne)'
+      - 'kill\s*(my|him|her|them)self'
+      - 'end\s*(my|his|her)\s*life'
+      - 'jeena\s*(nahi|nhi)\s*chah'
+      - 'आत्महत्या'
+      - 'मरना\s*चाह'
+  - id: severe_dehydration
+    label_en: severe dehydration
+    label_hi: गंभीर निर्जलीकरण
+    patterns:
+      - 'dehydrat'
+      - 'peshab\s*(nahi|nhi)\s*(aa|hua|ho|aaya)'
+      - 'no\s*urine'
+      - 'pani\s*(nahi|nhi)\s*pi\s*(pa|sak)'
+      - 'sunken\s*eyes'
+      - 'निर्जलीकरण'

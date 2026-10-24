@@ -1,0 +1,21 @@
+{
+  "t_emergency": 0.2,
+  "t_immediate": 0.3,
+  "t_same_day": 0.4,
+  "t_nurse_review": 0.62,
+  "ask_if_conf_below": 0.45,
+  "risk_margin": 0.15,
+  "tie_margin": 0.0,
+  "fallback_round_up": true,
+  "max_questions": 2,
+  "smooth_reasoning_with_llm": false,
+  "match_weights": {
+    "language": 0.35,
+    "distance": 0.3,
+    "skill": 0.2,
+    "rating": 0.15
+  },
+  "distance_cap_km": 12,
+  "t_follow_up": 0.5,
+  "urgency_prior_purity": 0.95
+}
