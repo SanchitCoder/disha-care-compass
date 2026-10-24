@@ -1,0 +1,180 @@
+# Curated follow-up questions, watch-lists and bring-lists per symptom cluster.
+# No LLM text is used for these (fast + safe). Languages: en | hinglish (Roman Hindi) | hi (Devanagari).
+# Never put disease names, medicine names or doses here.
+probe_questions:
+  breathing_difficulty:
+    en: "Is there any difficulty breathing?"
+    hinglish: "Kya saans lene mein dikkat ho rahi hai?"
+    hi: "क्या साँस लेने में दिक्कत हो रही है?"
+  chest_pain:
+    en: "Is there chest pain, or sweating with pain spreading to the arm or jaw?"
+    hinglish: "Kya seene mein dard hai, ya paseena ke saath dard haath ya jabde tak ja raha hai?"
+    hi: "क्या सीने में दर्द है, या पसीने के साथ दर्द हाथ या जबड़े तक जा रहा है?"
+  confusion:
+    en: "Is the patient confused, very drowsy or hard to wake?"
+    hinglish: "Kya mareez confuse hai, bahut ghabra raha hai ya mushkil se jaag raha hai?"
+    hi: "क्या मरीज़ भ्रमित है, बहुत सुस्त है या मुश्किल से जाग रहा है?"
+  unable_to_eat_drink:
+    en: "Is the patient unable to eat or drink anything?"
+    hinglish: "Kya mareez kuch kha ya pee nahi pa raha?"
+    hi: "क्या मरीज़ कुछ खा या पी नहीं पा रहा?"
+  age_band:
+    en: "How old is the patient?"
+    hinglish: "Mareez ki umar kitni hai?"
+    hi: "मरीज़ की उम्र कितनी है?"
+  intent:
+    en: "Happy to help. Could you tell me the main symptom or service you need (home visit, nursing, lab test, or teleconsult)?"
+    hinglish: "Zaroor madad karenge. Aap bataiye ki mukhya takleef ya zaroorat kya hai (ghar par visit, nursing, lab test ya doctor consult)?"
+    hi: "ज़रूर मदद करेंगे। बताइए मुख्य तकलीफ़ या ज़रूरत क्या है (घर पर विज़िट, नर्सिंग, लैब टेस्ट या डॉक्टर कंसल्ट)?"
+intent_options:     # quick-reply chips in the app (the answer text is sent as the user's reply)
+  en: ["Fever, cough or weakness", "Injection or dressing", "Lab test at home", "Talk to a doctor"]
+  hinglish: ["Bukhar, khansi ya kamzori", "Injection ya dressing", "Ghar par lab test", "Doctor se baat"]
+  hi: ["बुखार, खांसी या कमज़ोरी", "इंजेक्शन या ड्रेसिंग", "घर पर लैब टेस्ट", "डॉक्टर से बात"]
+yes_no_options:
+  en: ["Yes", "No"]
+  hinglish: ["Haan", "Nahi"]
+  hi: ["हाँ", "नहीं"]
+age_options:        # order matters: -> age_band values below
+  en: ["Under 5 years", "5-60", "Over 60"]
+  hinglish: ["5 saal se kam", "5–60", "60 se zyada"]
+  hi: ["5 साल से कम", "5–60", "60 से ज़्यादा"]
+age_option_bands: ["1-5", "18-40", "60+"]
+parent_relations: [father, mother]       # age is not asked for these (assumed adult; 60+ stated explicitly)
+
+# priority order when several clusters match equally
+cluster_order: [chest, respiratory, head_neuro, child, pregnancy, injury, abdominal, fever, chronic_procedure, general]
+
+clusters:
+  chest:
+    keywords: [seene, sina, chhati, chest, dil, heart, dhadkan, palpitation, सीने, छाती]
+    skill_keywords: [cardio, heart, chest]
+    probes:
+      - {id: chest_pain, critical: true}
+      - {id: breathing_difficulty, critical: true}
+    watch:
+      - {en: "Pain spreading to arm, jaw or back", hinglish: "Dard haath, jabde ya peeth tak jaye", hi: "दर्द हाथ, जबड़े या पीठ तक जाए"}
+      - {en: "Sweating, nausea or feeling faint", hinglish: "Paseena, ghabrahat ya chakkar aaye", hi: "पसीना, घबराहट या चक्कर आए"}
+      - {en: "Pain lasting more than 10 minutes", hinglish: "Dard 10 minute se zyada rahe", hi: "दर्द 10 मिनट से ज़्यादा रहे"}
+    bring: [bp_monitor, pulse_oximeter, ecg_if_available]
+  respiratory:
+    keywords: [khansi, khasi, cough, saans, sans, breath, zukam, cold, gala, throat, balgam, ghabrahat, खांसी, खाँसी, ज़ुकाम, गला]
+    skill_keywords: [respir, breath, chest, fever]
+    probes:
+      - {id: breathing_difficulty, critical: true}
+      - {id: age_band, critical: true}
+      - {id: chest_pain, critical: false}
+      - {id: unable_to_eat_drink, critical: false}
+    watch:
+      - {en: "Difficulty breathing or breathing very fast", hinglish: "Saans lene mein dikkat ho ya saans bahut tez chale", hi: "साँस लेने में दिक्कत हो या साँस बहुत तेज़ चले"}
+      - {en: "Lips or face turning blue-grey", hinglish: "Hoth ya chehra neela padne lage", hi: "होंठ या चेहरा नीला पड़ने लगे"}
+      - {en: "Fever lasting more than 3 days", hinglish: "Bukhar 3 din se zyada rahe", hi: "बुखार 3 दिन से ज़्यादा रहे"}
+      - {en: "Very drowsy or not drinking fluids", hinglish: "Bahut neend aaye ya kuch pee na paye", hi: "बहुत नींद आए या कुछ पी न पाए"}
+    bring: [thermometer, pulse_oximeter, stethoscope, mask]
+  fever:
+    keywords: [bukhar, bukhaar, fever, tez garam, body pain, badan dard, thand, kaanp, बुखार, ज्वर]
+    skill_keywords: [fever, general, vitals]
+    probes:
+      - {id: breathing_difficulty, critical: true}
+      - {id: age_band, critical: true}
+      - {id: confusion, critical: false}
+      - {id: unable_to_eat_drink, critical: false}
+    watch:
+      - {en: "Difficulty breathing", hinglish: "Saans lene mein dikkat ho", hi: "साँस लेने में दिक्कत हो"}
+      - {en: "Fever lasting more than 3 days", hinglish: "Bukhar 3 din se zyada rahe", hi: "बुखार 3 दिन से ज़्यादा रहे"}
+      - {en: "Confusion, very drowsy or a fit", hinglish: "Mareez confuse ho, bahut sust ho ya daura pade", hi: "मरीज़ भ्रमित हो, बहुत सुस्त हो या दौरा पड़े"}
+      - {en: "Not able to drink fluids or no urine for 8 hours", hinglish: "Kuch pee na paye ya 8 ghante peshab na aaye", hi: "कुछ पी न पाए या 8 घंटे पेशाब न आए"}
+    bring: [thermometer, pulse_oximeter, bp_monitor]
+  abdominal:
+    keywords: [pet, stomach, ulti, vomit, dast, loose motion, potty, gas, acidity, kabz, constipation, पेट, उल्टी, दस्त]
+    skill_keywords: [abdom, gastro, general]
+    probes:
+      - {id: unable_to_eat_drink, critical: true}
+      - {id: confusion, critical: false}
+    watch:
+      - {en: "Vomiting blood or black stools", hinglish: "Ulti mein khoon ya kaala potty ho", hi: "उल्टी में खून या काला मल हो"}
+      - {en: "Severe or worsening belly pain", hinglish: "Pet ka dard bahut tez ya badhta jaye", hi: "पेट का दर्द बहुत तेज़ या बढ़ता जाए"}
+      - {en: "Cannot keep any fluid down, very dry mouth", hinglish: "Kuch pee na paye, munh bahut sookh jaye", hi: "कुछ पी न पाए, मुँह बहुत सूख जाए"}
+    bring: [thermometer, bp_monitor, hydration_assessment_kit]
+  head_neuro:
+    keywords: [sir dard, sar dard, headache, chakkar, dizzy, migraine, sunn, numb, kamzori, weakness, सिर दर्द, चक्कर]
+    skill_keywords: [neuro, general]
+    probes:
+      - {id: confusion, critical: true}
+      - {id: unable_to_eat_drink, critical: false}
+    watch:
+      - {en: "Sudden severe headache", hinglish: "Achanak bahut tez sir dard ho", hi: "अचानक बहुत तेज़ सिर दर्द हो"}
+      - {en: "Weakness on one side, face droop or slurred speech", hinglish: "Ek taraf kamzori, muh tedha ya bolne mein dikkat", hi: "एक तरफ़ कमज़ोरी, मुँह टेढ़ा या बोलने में दिक्कत"}
+      - {en: "Repeated vomiting or confusion", hinglish: "Baar baar ulti ya confusion ho", hi: "बार बार उल्टी या भ्रम हो"}
+    bring: [bp_monitor, thermometer, glucometer]
+  injury:
+    keywords: [chot, injury, gira, gir gaya, fracture, sujan, moch, cut, kata, ghav, wound, चोट, गिर]
+    skill_keywords: [injur, wound, ortho]
+    probes:
+      - {id: confusion, critical: true}
+      - {id: breathing_difficulty, critical: false}
+    watch:
+      - {en: "Bleeding that does not stop with pressure", hinglish: "Dabane par bhi khoon na ruke", hi: "दबाने पर भी खून न रुके"}
+      - {en: "Vomiting, drowsiness or confusion after a head knock", hinglish: "Sir ki chot ke baad ulti, neend ya confusion", hi: "सिर की चोट के बाद उल्टी, नींद या भ्रम"}
+      - {en: "Limb looks bent or cannot be moved", hinglish: "Haath/pair mud gaya ho ya hil na paye", hi: "हाथ/पैर मुड़ गया हो या हिल न पाए"}
+    bring: [dressing_kit, bp_monitor, splint, thermometer]
+  pregnancy:
+    keywords: [pregnan, garbh, pregnancy, delivery, trimester, गर्भ]
+    skill_keywords: [gynae, obstet, pregnan, maternal]
+    probes:
+      - {id: breathing_difficulty, critical: false}
+      - {id: unable_to_eat_drink, critical: false}
+    watch:
+      - {en: "Any bleeding or fluid leaking", hinglish: "Koi bhi khoon ya paani aaye", hi: "कोई भी खून या पानी आए"}
+      - {en: "Baby moving much less", hinglish: "Bachche ki halchal bahut kam ho", hi: "बच्चे की हलचल बहुत कम हो"}
+      - {en: "Severe headache, blurred vision or swelling", hinglish: "Bahut tez sir dard, dhundhla dikhna ya sujan", hi: "बहुत तेज़ सिर दर्द, धुंधला दिखना या सूजन"}
+    bring: [bp_monitor, thermometer, doppler_if_available]
+  child:
+    keywords: [bachcha, bachche, bacha, baby, child, kid, shishu, बच्चा, बच्चे]
+    skill_keywords: [child, paed, pediat]
+    probes:
+      - {id: breathing_difficulty, critical: true}
+      - {id: unable_to_eat_drink, critical: true}
+      - {id: age_band, critical: true}
+    watch:
+      - {en: "Fast or noisy breathing", hinglish: "Saans tez ya awaaz ke saath chale", hi: "साँस तेज़ या आवाज़ के साथ चले"}
+      - {en: "Not feeding or no wet nappy for 6 hours", hinglish: "Doodh/khana na le ya 6 ghante peshab na kare", hi: "दूध/खाना न ले या 6 घंटे पेशाब न करे"}
+      - {en: "Very sleepy, limp or a fit", hinglish: "Bahut sust, dheela pad jaye ya daura pade", hi: "बहुत सुस्त, ढीला पड़ जाए या दौरा पड़े"}
+    bring: [thermometer, pulse_oximeter, paediatric_weighing_scale]
+  chronic_procedure:
+    keywords: [injection, dressing, catheter, drip, iv, sugar, diabetes, bp, pressure, thyroid, ghutne, knee, kamar, back pain, checkup, follow up, review, इंजेक्शन, पट्टी]
+    skill_keywords: [wound, inject, catheter, iv, elderly, diabet, ortho, cardio, general]
+    probes:
+      - {id: unable_to_eat_drink, critical: false}
+    watch:
+      - {en: "Fever, redness or pus around the area", hinglish: "Jagah par bukhar, laali ya pus aaye", hi: "उस जगह बुखार, लालिमा या मवाद आए"}
+      - {en: "Sudden worsening of any symptom", hinglish: "Koi bhi takleef achanak badh jaye", hi: "कोई भी तकलीफ़ अचानक बढ़ जाए"}
+      - {en: "Dizziness, fainting or sweating", hinglish: "Chakkar, behoshi ya bahut paseena aaye", hi: "चक्कर, बेहोशी या बहुत पसीना आए"}
+    bring: [dressing_kit, bp_monitor, glucometer, thermometer, sterile_gloves]
+  general:
+    keywords: []
+    skill_keywords: [general]
+    probes: []
+    watch:
+      - {en: "Symptoms getting worse instead of better", hinglish: "Takleef kam hone ki jagah badhti jaye", hi: "तकलीफ़ कम होने की जगह बढ़ती जाए"}
+      - {en: "Difficulty breathing", hinglish: "Saans lene mein dikkat ho", hi: "साँस लेने में दिक्कत हो"}
+      - {en: "Confusion or very drowsy", hinglish: "Confusion ho ya bahut neend aaye", hi: "भ्रम हो या बहुत नींद आए"}
+    bring: [thermometer, bp_monitor]
+
+watch_suffix:
+  en: "-> if this happens, call 112 / 108 now"
+  hinglish: "-> agar aisa ho to turant 112 / 108 call karein"
+  hi: "-> अगर ऐसा हो तो तुरंत 112 / 108 पर कॉल करें"
+
+# fixed allowed list for the Visit Brief (LLM may only choose from these)
+allowed_bring:
+  [thermometer, pulse_oximeter, bp_monitor, stethoscope, glucometer, dressing_kit, sterile_gloves, mask, splint,
+   ecg_if_available, hydration_assessment_kit, paediatric_weighing_scale, doppler_if_available]
+
+checkin_questions:
+  en: "How is the patient now? Is the fever/pain better and breathing comfortable?"
+  hinglish: "Mareez ab kaisa hai? Takleef kam hui? Saans theek hai?"
+  hi: "मरीज़ अब कैसा है? तकलीफ़ कम हुई? साँस ठीक है?"
+checkin_options:
+  en: ["Better", "Same", "Worse"]
+  hinglish: ["Behtar", "Waisa hi", "Zyada kharab"]
+  hi: ["बेहतर", "वैसा ही", "ज़्यादा खराब"]
